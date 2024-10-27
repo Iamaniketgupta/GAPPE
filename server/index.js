@@ -23,8 +23,8 @@ await connectDB();
   const io = new Server(httpServer, {
      connectionStateRecovery: {}, // connection recovery
     cors: {
-      origin: true,
-
+      origin: 'https://gappe.vercel.app',
+      
     },
     pingTimeout: 60000,
   });
