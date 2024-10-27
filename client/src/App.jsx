@@ -22,7 +22,6 @@ import { SocketProvider } from './Contexts/SocketProvider.jsx'
 function App() {
   const [currentUserData, setUserData] = useRecoilState(userData);
   const navigate = useNavigate();
-  console.log(currentUserData)
   const fetchUserData = async () => {
     try {
       const token = getCookie('authToken')
