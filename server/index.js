@@ -13,21 +13,7 @@ import { ExpressPeerServer } from "peer";
 // Connect to the database
 await connectDB();
 
-if (cluster.isPrimary) {
-  const numCPUs = availableParallelism(); // Get the number of CPU cores
 
-  // Create one worker per CPU core
-  for (let i = 0; i < numCPUs; i++) {
-    cluster.fork({
-      PORT: 3000 + i, // Assign distinct ports 
-    });
-  }
-
-  setupPrimary();
-
-  console.log(`Primary process running. Forked ${numCPUs} workers.`);
-} else {
-  // Initialize Express and Socket.IO in each worker process
   const httpServer = createServer(app);
 
   const peerServer = ExpressPeerServer(httpServer, {
@@ -39,7 +25,6 @@ if (cluster.isPrimary) {
 
   const io = new Server(httpServer, {
      connectionStateRecovery: {}, // connection recovery
-     adapter: createAdapter(), //  cluster adapter
     cors: {
       origin: process.env.CLIENT_URL,
       methods: ["GET", "POST"],
@@ -57,4 +42,4 @@ if (cluster.isPrimary) {
   process.on("unhandledRejection", (err) => {
     console.error("Unhandled promise rejection:", err);
   });
-}
+
