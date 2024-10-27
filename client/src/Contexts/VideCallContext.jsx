@@ -180,11 +180,11 @@ export const VideoCallProvider = ({ children }) => {
     };
 
     peer.on('call', (call) => {
-        call.answer(localStreamRef.current);
+        call.answer(localStreamRef.current || myStream);
         toast.success('Stream aagy jisne call kiya tha uski')
-        call.on('stream', (remoteStream) => {
-            setRemoteStream(remoteStream)
-            remoteVideoRef.current = remoteStream;
+        call.on('stream', (remStream) => {
+            setRemoteStream(remStream)
+            remoteVideoRef.current = remStream;
         });
     });
 

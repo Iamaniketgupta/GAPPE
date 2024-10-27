@@ -15,7 +15,7 @@ const VideoCallInterfaceModal = () => {
         handleOnClickCallEnd,
         myStream, localStreamRef, isMuted, camOn, partnerMicStatus, partnerCamStatus } = useContext(VideoCallContext);
     const { handleToggleAudio, handleToggleVideo } = UseMediaControls()
-
+alert(remoteStream)
 
     return (
         <div className='bg-slate-100 dark:bg-stone-800 p-4 h-full w-full text-gray-900 dark:text-gray-200 flex flex-col-reverse md:grid md:grid-cols-4 gap-4'>
