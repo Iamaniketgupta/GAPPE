@@ -3,7 +3,8 @@ import axiosRetry from 'axios-retry';
 import Cookie from "universal-cookie";
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000/api', 
+  // baseURL: 'http://localhost:3000/api', 
+  baseURL: 'https://gappe-server.vercel.app/api', 
   withCredentials: true, 
 });
 

@@ -9,8 +9,7 @@ export default function usePeer() {
       try {
         const newPeer = new Peer(
           {
-            host: 'localhost',
-            port: 3000,
+            host: 'https://gappe-server.vercel.app',
             path: '/peerjs',
             
           }
