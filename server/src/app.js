@@ -24,3 +24,4 @@ app.use('/api/message',MessageRoutes);
 app.use('/api/notification',NotificationRoutes);
 
 export default app;
+
