@@ -42,22 +42,7 @@ export const VideoCallProvider = ({ children }) => {
     const { peer, myPeerId } = usePeer();
 
 
-      //  LISTEN FOR REMOTE CALL AND STREAM
-      useEffect(() => {
-        if (!peer) {
-            return;
-        };
-
-        peer.on('call', (call) => {
-            call.answer(myStream || localStreamRef.current);
-            call.on('stream', (remoteStream) => {
-                setRemoteStream(remoteStream)
-                remoteVideoRef.current = remoteStream;
-            });
-        });
-
-    }, [peer, myStream]);
-
+     
 
     // INIT CALL
     const startVideoCall = async ({ chatId, targetId }) => {
@@ -188,6 +173,21 @@ export const VideoCallProvider = ({ children }) => {
         handleCallEnd();
     }
 
+ //  LISTEN FOR REMOTE CALL AND STREAM
+ useEffect(() => {
+    if (!peer) {
+        return;
+    };
+
+    peer.on('call', (call) => {
+        call.answer(myStream || localStreamRef.current);
+        call.on('stream', (remoteStream) => {
+            setRemoteStream(remoteStream)
+            remoteVideoRef.current = remoteStream;
+        });
+    });
+
+}, [peer, myStream,localStreamRef.current]);
 
   
     // SOCKET LISTENERS FOR INCOMING CALLS
