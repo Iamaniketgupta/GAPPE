@@ -14,18 +14,12 @@ app.use(cors({
     credentials:true
 }))
 
-// const peerServer = PeerServer({ 
-//     port: process.env.PORT || 9000,
-//     path: '/peerjs', 
-//     allow_discovery: true,
-// });
-
-// app.use('/peerjs', peerServer);
-
-
 app.use('/api/user',UserRouter);
 app.use('/api/users',FetchUsers);
 app.use('/api/chat',ChatRoutes);
 app.use('/api/message',MessageRoutes);
 app.use('/api/notification',NotificationRoutes);
+app.use('/',(req,res)=>{
+    res.send('gappe Server is online')
+})
 export default app;
