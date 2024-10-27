@@ -10,7 +10,7 @@ export const SocketProvider = ({ children }) => {
     const [currUser] = useRecoilState(userData);
     
     useEffect(() => {
-        const newSocket = io('https://gappe.onrender.com');
+        const newSocket = io('https://gappe-server.vercel.app');
         setSocket(newSocket);
  
       if(!newSocket) return;
