@@ -19,6 +19,7 @@ import NotFoundPage from './Pages/NotFound/NotFoundPage.jsx'
 import VideoCall from './VideoChat/VideoCall.jsx'
 import { VideoCallProvider } from './Contexts/VideCallContext.jsx'
 import { SocketProvider } from './Contexts/SocketProvider.jsx'
+import Navbar from './Pages/Home/components/NavBar.jsx'
 function App() {
   const [currentUserData, setUserData] = useRecoilState(userData);
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ function App() {
   return (
     <Routes>
       <Route path='*' element={<NotFoundPage />}></Route>
-      <Route path='/' element={<Home />}></Route>
+      <Route path='/' element={<><Navbar/><Home /></>}></Route>
       <Route path='/editor/:docId' element={<EditorMain />}></Route>
       <Route path='/login' element={<Login />}></Route>
       <Route path='/signup' element={<SignUp />}></Route>
