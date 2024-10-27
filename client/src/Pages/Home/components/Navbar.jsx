@@ -43,7 +43,7 @@ const Navbar = () => {
             <div
               className={`text-2xl md:pl-2 text-blue-600 font-bold ${!open && "hidden"}`}
             >
-              👋<span className='text-gray-700 ml-2 dark:text-gray-100 '>Baat</span> Chit
+              👋<span className='text-gray-700 ml-2 dark:text-gray-100 '>GAPPE</span>
             </div>
           </Link>
           <ul className="hidden lg:flex ml-14 space-x-12">
