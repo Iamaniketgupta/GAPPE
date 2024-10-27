@@ -1,6 +1,5 @@
-import React from 'react';
-import HeroSection from './components/HeroSection';
 import Navbar from './components/NavBar';
+import HeroSection from './components/HeroSection';
 
 const Home = () => {
     return (
