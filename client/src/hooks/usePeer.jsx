@@ -7,13 +7,7 @@ export default function usePeer() {
   useEffect(() => {
     let isMounted = true; 
       try {
-        const newPeer = new Peer(
-          {
-            host: 'https://gappe-server.vercel.app',
-            path: '/peerjs',
-            
-          }
-        );
+        const newPeer = new Peer();
 
         peerRef.current = newPeer;
 
