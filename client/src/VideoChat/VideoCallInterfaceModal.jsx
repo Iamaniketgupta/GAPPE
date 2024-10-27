@@ -18,10 +18,10 @@ const VideoCallInterfaceModal = () => {
 const [partnerStream,setPartnerStream]=useState(remoteStream)
 
     useEffect(() => {
-        setPartnerStream(remoteStream)
-    },[remoteStream] 
+        setPartnerStream(remoteStream||remoteVideoRef.current)
+    },[remoteStream,remoteVideoRef.current] 
     )
-
+console.log(partnerStream)
     return (
         <div className='bg-slate-100 dark:bg-stone-800 p-4 h-full w-full text-gray-900 dark:text-gray-200 flex flex-col-reverse md:grid md:grid-cols-4 gap-4'>
             {/* Local Video Section */}
@@ -34,6 +34,8 @@ const [partnerStream,setPartnerStream]=useState(remoteStream)
                 {partnerStream ? (
                     <>
                         <VideoWrapper stream={partnerStream} isMuted={false} />
+                        <video src={remoteStream}></video>
+                        <video src={remoteVideoRef.current}></video>
                     </>
                 )
                     : (
