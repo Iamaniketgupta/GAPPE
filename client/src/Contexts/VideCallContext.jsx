@@ -123,7 +123,7 @@ export const VideoCallProvider = ({ children }) => {
         try {
             setLoading(true);
             setRemotePeerId(accepterPeerId);
-            const call =  peer.call(accepterPeerId, myStream ||localStreamRef.current );
+            const call =  peer.call(accepterPeerId, myStream);
             call.on('stream', (remoteStream) => {
                 toast.success('Call connected')
                 console.log('Receiving remote stream on caller side', remoteStream);
@@ -180,7 +180,8 @@ export const VideoCallProvider = ({ children }) => {
     };
 
     peer.on('call', (call) => {
-        call.answer(myStream || localStreamRef.current);
+        call.answer(myStream);
+        toast.success('Stream aagy jisne call kiya tha uski')
         call.on('stream', (remoteStream) => {
             setRemoteStream(remoteStream)
             remoteVideoRef.current = remoteStream;
