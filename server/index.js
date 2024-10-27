@@ -23,8 +23,8 @@ await connectDB();
   const io = new Server(httpServer, {
      connectionStateRecovery: {}, // connection recovery
     cors: {
-      origin: process.env.CLIENT_URL,
-      methods: ["GET", "POST"],
+      origin: true,
+
     },
     pingTimeout: 60000,
   });
