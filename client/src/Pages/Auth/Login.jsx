@@ -11,6 +11,7 @@ import { serverUrl } from '../../constants/apiurls';
 import { useRecoilState } from 'recoil';
 import { userData } from '../../atoms/state';
 import { getCookie, setCookie } from '../../constants/cookiesApis';
+import axiosInstance from '../../constants/axiosInstance';
 
 const Login = () => {
    const navigate = useNavigate();
@@ -70,10 +71,11 @@ const Login = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await axios.post(`${serverUrl}/user/login`, {
+            const res = await axiosInstance.post(`/user/login`, {
                 ...data
             })
             toast.success(res?.data?.message || 'Success');
+            console.log(res)
             setCookie('authToken', res?.data?.token);
             setUserData(
                 res?.data?.user
