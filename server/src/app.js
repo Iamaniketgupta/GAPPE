@@ -14,9 +14,7 @@ app.use(cors({
     credentials:true
 }))
 
-app.use('/',(req,res)=>{
-    res.send('gappe Server is online')
-})
+
 app.use('/api/user',UserRouter);
 app.use('/api/users',FetchUsers);
 app.use('/api/chat',ChatRoutes);
