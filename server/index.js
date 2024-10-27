@@ -17,6 +17,10 @@ await connectDB();
     debug: true
   });
 
+  app.use('/', (req,res)=>{
+    res.send('gappe Server is online')
+  });
+  
   app.use('/peerjs', peerServer);
 
 
