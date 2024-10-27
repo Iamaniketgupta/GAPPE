@@ -41,6 +41,24 @@ export const VideoCallProvider = ({ children }) => {
     // PEER HOOK STATES
     const { peer, myPeerId } = usePeer();
 
+
+      //  LISTEN FOR REMOTE CALL AND STREAM
+      useEffect(() => {
+        if (!peer) {
+            return;
+        };
+
+        peer.on('call', (call) => {
+            call.answer(myStream || localStreamRef.current);
+            call.on('stream', (remoteStream) => {
+                setRemoteStream(remoteStream)
+                remoteVideoRef.current = remoteStream;
+            });
+        });
+
+    }, [peer, myStream]);
+
+
     // INIT CALL
     const startVideoCall = async ({ chatId, targetId }) => {
         if (!socket) return;
@@ -120,8 +138,9 @@ export const VideoCallProvider = ({ children }) => {
         try {
             setLoading(true);
             setRemotePeerId(accepterPeerId);
-            const call = peer.call(accepterPeerId, localStreamRef.current || myStream);
+            const call =  peer.call(accepterPeerId, myStream ||localStreamRef.current );
             call.on('stream', (remoteStream) => {
+                toast.success('Call connected')
                 console.log('Receiving remote stream on caller side', remoteStream);
                 remoteVideoRef.current = remoteStream;
                 setRemoteStream(remoteStream);
@@ -170,23 +189,7 @@ export const VideoCallProvider = ({ children }) => {
     }
 
 
-    //  LISTEN FOR REMOTE CALL AND STREAM
-    useEffect(() => {
-        if (!peer) {
-            return;
-        };
-
-        peer.on('call', (call) => {
-            call.answer(localStreamRef.current ||myStream);
-            call.on('stream', (remoteStream) => {
-                setRemoteStream(remoteStream)
-                remoteVideoRef.current = remoteStream;
-            });
-        });
-console.log(peer)
-
-    }, [peer, myStream,localStreamRef]);
-
+  
     // SOCKET LISTENERS FOR INCOMING CALLS
     useEffect(() => {
         if (!socket) return;
