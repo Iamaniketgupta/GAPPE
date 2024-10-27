@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import VideoWrapper from './common/VideoWrapper';
 import { VideoCallContext } from '../Contexts/VideCallContext';
 import Loader from '../common/Loader';
@@ -15,7 +15,12 @@ const VideoCallInterfaceModal = () => {
         handleOnClickCallEnd,
         myStream, localStreamRef, isMuted, camOn, partnerMicStatus, partnerCamStatus } = useContext(VideoCallContext);
     const { handleToggleAudio, handleToggleVideo } = UseMediaControls()
-alert(remoteStream)
+const [partnerStream,setPartnerStream]=useState(remoteStream)
+
+    useEffect(() => {
+        setPartnerStream(remoteStream)
+    },[remoteStream] 
+    )
 
     return (
         <div className='bg-slate-100 dark:bg-stone-800 p-4 h-full w-full text-gray-900 dark:text-gray-200 flex flex-col-reverse md:grid md:grid-cols-4 gap-4'>
@@ -26,9 +31,9 @@ alert(remoteStream)
                         !partnerMicStatus ? <IoMdMic className='text-3xl text-white bg-green-500 hover:bg-blue-600 rounded-full p-2 cursor-pointer' />
                             : <MdMicOff className='text-3xl text-white bg-red-500 hover:bg-blue-600 rounded-full p-2 cursor-pointer' />}
                 </div>
-                {remoteStream ? (
+                {partnerStream ? (
                     <>
-                        <VideoWrapper stream={remoteStream} isMuted={false} />
+                        <VideoWrapper stream={partnerStream} isMuted={false} />
                     </>
                 )
                     : (
