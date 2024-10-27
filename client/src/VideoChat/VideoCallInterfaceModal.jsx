@@ -11,7 +11,7 @@ import useUserMedia from '../hooks/useMediaStream';
 import UseMediaControls from '../hooks/useMediaControls';
 
 const VideoCallInterfaceModal = () => {
-    const { remoteVideoRef, remoteStream,
+    const { remoteStream,
         handleOnClickCallEnd,
         myStream, localStreamRef, isMuted, camOn, partnerMicStatus, partnerCamStatus } = useContext(VideoCallContext);
     const { handleToggleAudio, handleToggleVideo } = UseMediaControls()
@@ -26,11 +26,9 @@ const VideoCallInterfaceModal = () => {
                         !partnerMicStatus ? <IoMdMic className='text-3xl text-white bg-green-500 hover:bg-blue-600 rounded-full p-2 cursor-pointer' />
                             : <MdMicOff className='text-3xl text-white bg-red-500 hover:bg-blue-600 rounded-full p-2 cursor-pointer' />}
                 </div>
-                {remoteStream || remoteVideoRef.current ? (
+                {remoteStream ? (
                     <>
-
-                        <VideoWrapper stream={remoteStream || remoteVideoRef.current} isMuted={false} />
-
+                        <VideoWrapper stream={remoteStream} isMuted={false} />
                     </>
                 )
                     : (
