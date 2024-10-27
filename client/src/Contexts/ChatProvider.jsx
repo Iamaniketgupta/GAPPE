@@ -28,10 +28,8 @@ export const ChatProvider = ({ children }) => {
      
     }
     useEffect(() => {
-        if(!getCookie('authToken')){
-          return;  
-        }
-        else{
+        
+        if (token) {
             handleFetchChats();
 
             fetchAllUsers().then((allUsers) => {
