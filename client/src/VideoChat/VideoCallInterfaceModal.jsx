@@ -11,7 +11,7 @@ import useUserMedia from '../hooks/useMediaStream';
 import UseMediaControls from '../hooks/useMediaControls';
 
 const VideoCallInterfaceModal = () => {
-    const { remoteStream,
+    const { remoteStream,remoteVideoRef,
         handleOnClickCallEnd,
         myStream, localStreamRef, isMuted, camOn, partnerMicStatus, partnerCamStatus } = useContext(VideoCallContext);
     const { handleToggleAudio, handleToggleVideo } = UseMediaControls()
