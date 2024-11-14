@@ -1,4 +1,4 @@
-import { useContext, useCallback, useEffect, useState } from "react";
+import { useContext, useCallback, useEffect } from "react";
 import { VideoCallContext } from "../Contexts/VideCallContext";
 
 const userMediaConfig = {
@@ -24,7 +24,7 @@ export default function useUserMedia() {
     } catch (error) {
       console.error("Failed to get user media:", error);
     }
-  }, [setMyStream]);
+  }, [localStreamRef, setMyStream]);
 
   const toggleAudio = useCallback(() => {
     const audioTrack = localStreamRef.current?.getAudioTracks()[0];
@@ -41,6 +41,7 @@ export default function useUserMedia() {
       try {
         const newVideoStream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: "user" },
+          
         });
         const newVideoTrack = newVideoStream.getVideoTracks()[0];
 
@@ -55,14 +56,14 @@ export default function useUserMedia() {
         console.error("Failed to start video:", error);
       }
     }
-  }, [setMyStream]);
+  }, [localStreamRef, setMyStream]);
 
   const disableStream = useCallback(() => {   
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach((track) => track.stop());
       setMyStream(null);
     }
-  }, [setMyStream]);
+  }, [localStreamRef, setMyStream]);
 
   return { enableStream, toggleAudio, toggleVideo, disableStream,
     isMuted, setIsMuted,camOn,setCamOn

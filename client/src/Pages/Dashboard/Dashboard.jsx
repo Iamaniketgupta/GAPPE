@@ -47,7 +47,6 @@ const Dashboard = () => {
         }
     }, [incomingCall])
 
-    console.log(incomingCall)
 
     return (
         <div className='relative flex h-screen overflow-clip w-full bg-gray-100 dark:bg-stone-700'>

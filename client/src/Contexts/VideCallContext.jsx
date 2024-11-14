@@ -18,11 +18,11 @@ export const VideoCallProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [camOn, setCamOn] = useState(true);
-    const [partnerMicStatus , setPartnerMicStatus] = useState(false);
-    const [remotePeerId , setRemotePeerId] = useState(null);
-    const [partnerCamStatus , setPartnerCamStatus] = useState(false);
-    const [isScreenSharing, setIsScreenSharing] = useState(null);
-    
+    const [partnerMicStatus, setPartnerMicStatus] = useState(false);
+    const [remotePeerId, setRemotePeerId] = useState(null);
+    const [partnerCamStatus, setPartnerCamStatus] = useState(false);
+    // const [isScreenSharing, setIsScreenSharing] = useState(null);
+
     // SOCKET CONTEXT API
     const socket = useSocket();
 
@@ -36,18 +36,15 @@ export const VideoCallProvider = ({ children }) => {
     // REFERENCE STATES
     const remoteVideoRef = useRef();
     const localStreamRef = useRef();
-    const screenShareTrackRef = useRef();
+    // const screenShareTrackRef = useRef();
 
     // PEER HOOK STATES
     const { peer, myPeerId } = usePeer();
 
-
-     
-
     // INIT CALL
-    const startVideoCall = async ({ chatId, targetId }) => {
+    const startVideoCall = useCallback(async ({ chatId, targetId }) => {
         if (!socket) return;
-
+     
         const roomId = getRandomId();
         setRoomId(roomId);
 
@@ -68,12 +65,17 @@ export const VideoCallProvider = ({ children }) => {
 
         setReceiverStatus('Calling...');
 
-    };
+    }, [camOn, currUser, isMuted, myPeerId, peer, socket]);
 
     // ACCEPT CALL
     const handleOnAccept = useCallback(async () => {
         if (!incomingCall) return;
-
+        const myCurrStream = navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+        if (!myCurrStream) {
+            toast.error('Kindly turn on camera and mic before accepting call');
+            return;
+        }
+        setMyStream(myCurrStream);
         if (!peer) {
             toast.error('Something went wrong in accepting call')
             return;
@@ -94,7 +96,7 @@ export const VideoCallProvider = ({ children }) => {
     }, [currUser, incomingCall, myPeerId, peer, socket]);
 
     // REJECT CALL SOCKET EVENT HANDLER
-    const handleRejectCall = () => {
+    const handleRejectCall = useCallback(() => {
         if (incomingCall) {
             socket.emit("declineCall", {
                 roomId: incomingCall.roomId,
@@ -104,9 +106,9 @@ export const VideoCallProvider = ({ children }) => {
             setIncomingCall(null);
             setReceiverStatus('Call Declined User is busy!');
         }
-    };
+    }, [currUser, incomingCall, socket]);
 
-   
+
     // ESTABLISH PEER CALL AND CONNECTION
     const handleConnectedCall = useCallback(async ({ callerPeerId, accepterPeerId }) => {
 
@@ -114,20 +116,14 @@ export const VideoCallProvider = ({ children }) => {
             toast.error('Something went wrong in connecting call')
             return;
         }
-
-        if (!localStreamRef.current) {
-            toast.error('Kindly allow access to your microphone and camera')
-            return;
-        }
-
+    
         try {
             setLoading(true);
             setRemotePeerId(accepterPeerId);
-            const call =  peer.call(accepterPeerId, localStreamRef.current);
+            const call = peer.call(accepterPeerId, myStream);
             call.on('stream', (remoteStream) => {
                 toast.success('Call connected')
-                console.log('Receiving remote stream on caller side', remoteStream);
-                remoteVideoRef.current = remoteStream;
+                // remoteVideoRef.current = remoteStream;
                 setRemoteStream(remoteStream);
                 setLoading(false);
 
@@ -144,12 +140,12 @@ export const VideoCallProvider = ({ children }) => {
         setInitCall(false);
 
     }, [myStream, peer])
-    
+
 
 
     // HANDLE CALL END SOCKET EVENT
     const handleCallEnd = useCallback(() => {
-        window.location.reload(); 
+        window.location.reload();
         // if (localStreamRef.current) {
         //     localStreamRef.current.getTracks().forEach(track => track.stop());
         //     myStream(null);
@@ -161,41 +157,40 @@ export const VideoCallProvider = ({ children }) => {
         // setIncomingCall(null);
         // setRoomId(null);
         // setReceiverStatus('')
-        
+
     }, []);
-    
+
 
     // HANDLE CALL END BUTTON
-    const handleOnClickCallEnd = () => {
+    const handleOnClickCallEnd = useCallback(() => {
         socket.emit("endCall", {
             roomId: roomId,
         })
         handleCallEnd();
-    }
+    }, [handleCallEnd, roomId, socket])
 
- //  LISTEN FOR REMOTE CALL AND STREAM
- useEffect(() => {
-    if (!peer) {
-        return;
-    };
+    //  LISTEN FOR REMOTE CALL AND STREAM
+    useEffect(() => {
+        if (!peer) {
+            return;
+        };
 
-    peer.on('call', (call) => {
-        call.answer(localStreamRef.current || myStream);
-        toast.success('Stream aagy jisne call kiya tha uski')
-        call.on('stream', (remStream) => {
-            setRemoteStream(remStream)
-            remoteVideoRef.current = remStream;
+        peer.on('call', (call) => {
+            call.answer( myStream);
+            call.on('stream', (remStream) => {
+                setRemoteStream(remStream)
+                remoteVideoRef.current = remStream;
+            });
         });
-    });
 
-}, [peer, myStream,localStreamRef.current]);
+    }, [peer, myStream]);
 
-  
+
     // SOCKET LISTENERS FOR INCOMING CALLS
     useEffect(() => {
         if (!socket) return;
 
-        socket.on("incomingCall", async ({ caller, roomId, targetChatId, peerId, targetId 
+        socket.on("incomingCall", async ({ caller, roomId, targetChatId, peerId, targetId
             , callerMicStatus, callerCamStatus }) => {
 
             setIncomingCall({
@@ -214,19 +209,19 @@ export const VideoCallProvider = ({ children }) => {
         socket.on("callTerminated", handleCallEnd);
 
         socket.on("toggleAudio", ({ micStatus }) => {
-           setPartnerMicStatus(micStatus);
+            setPartnerMicStatus(micStatus);
         })
         socket.on("toggleVideo", ({ camStaus }) => {
-           setPartnerCamStatus(camStaus);
+            setPartnerCamStatus(camStaus);
         })
 
         return () => {
             socket.off("incomingCall");
             socket.off("callActive", handleConnectedCall);
-            socket.off("callTerminated",handleCallEnd);
+            socket.off("callTerminated", handleCallEnd);
         };
 
-    }, [socket]);
+    }, [handleCallEnd, handleConnectedCall, socket]);
 
 
 
@@ -246,11 +241,11 @@ export const VideoCallProvider = ({ children }) => {
                 initCall, setInitCall,
                 localStreamRef,
                 remoteStream, setRemoteStream,
-                loading,roomId,
-                isMuted,camOn,
+                loading, roomId,
+                isMuted, camOn,
                 setCamOn,
                 setIsMuted,
-                partnerMicStatus,partnerCamStatus,
+                partnerMicStatus, partnerCamStatus,
             }}
         >
             {children}

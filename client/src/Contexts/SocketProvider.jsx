@@ -10,6 +10,7 @@ export const SocketProvider = ({ children }) => {
     const [currUser] = useRecoilState(userData);
     
     useEffect(() => {
+        // const newSocket = io('http://localhost:3000');
         const newSocket = io('https://gappe.onrender.com');
         setSocket(newSocket);
  
@@ -18,7 +19,7 @@ export const SocketProvider = ({ children }) => {
             newSocket.emit('setup', currUser);
         }
         newSocket.on('connect', () => {
-            console.log('Socket connected:', newSocket.id);
+            // console.log('Socket connected:', newSocket.id);
         });
 
         return () => newSocket.disconnect();

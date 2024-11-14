@@ -1,8 +1,8 @@
 
 export const chatSockets = (io) => {
 
-    const onlineUsers = new Map();  // Track active/online users in the room
-    const activeCalls = new Map();  // Track active calls
+    const onlineUsers = new Map();  
+    const activeCalls = new Map(); 
 
     io.on("connection", (socket) => {
         console.log('A user connected');
@@ -11,7 +11,6 @@ export const chatSockets = (io) => {
         socket.on('setup', (data) => {
             socket.join(data?._id);
             onlineUsers.set(data._id, socket.id);
-            console.log(data.fullName)
             io.emit('user online', Array.from(onlineUsers.keys()));
             socket.emit('connected');
             console.log(onlineUsers)
@@ -44,6 +43,7 @@ export const chatSockets = (io) => {
         // TYPING
         socket.on('typing', (data) => {
             const { roomId, user } = data
+            console.log(roomId,'is TYPING')
             if (socket.rooms.has(roomId)) {
                 socket.to(roomId).emit('typing', user);
             }

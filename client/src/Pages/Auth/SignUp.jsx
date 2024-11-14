@@ -143,8 +143,8 @@ const SignUp = () => {
 
 
                     <GoogleOAuthProvider clientId="702829994495-1vhv30rsk04lssok9o2lmqi5d1cd7cha.apps.googleusercontent.com">
-                        <div className=' max-w-[500px] border-none  rounded-full mx-auto'>
-                            <div className='mt-4  rounded-full dark:bg-stone-800'>
+                    <div className='md:w-[450px] max-sm:w-[260px] border-none  rounded-full mx-auto'>
+                    <div className='mt-4  rounded-full dark:bg-stone-800'>
                                 <GoogleLogin
                                     theme={`${mode ? 'filled_black' : 'filled_white'}`}
 

@@ -18,7 +18,7 @@ const AllChats = () => {
     const [allChatMessages, setAllChatMessages] = useRecoilState(allChatsMessagesState); //onhold
 
     const [currentUser] = useRecoilState(userData)
-    const { allChats, setAllChats, notifications, latestMessage, messages } = useChatContext();
+    const { allChats, setAllChats, notifications, latestMessage, messages,allChatsMessages } = useChatContext();
     const [filterChats, setFilterChats] = useState(allChats);
     const [loading, setLoading] = useState(false);
 
@@ -97,7 +97,7 @@ const AllChats = () => {
                     <SearchInp onChange={onSearch} placeholder="Search Chats" />
                 </div>
 
-                <div className='my-4 px-4 flex gap-2 items-center'>
+                {/* <div className='my-4 px-4 flex gap-2 items-center'>
                     <button className='bg-stone-600 text-gray-50 py-1 px-2 
                rounded-md text-xs  hover:bg-stone-700'>
                         All</button>
@@ -107,7 +107,7 @@ const AllChats = () => {
                     <button className='bg-stone-600 text-gray-50 py-1 px-2 
                rounded-md text-xs  hover:bg-stone-700 '>
                         Unread</button>
-                </div>
+                </div> */}
 
             </div>
 
@@ -121,9 +121,18 @@ const AllChats = () => {
                     (<div className='flex overflow-y-auto relative max-h-[calc(100vh-100px)] flex-col gap-2'
                         style={{ scrollbarWidth: 'none', scrollbarColor: 'blue' }}>
                         {filterChats?.map((item) => {
-                            const allNotificationMessages = notifications?.filter((i) => i.chat._id === item?._id);
-                            const latestChatMessage = allNotificationMessages && allNotificationMessages.length > 0 ? allNotificationMessages[allNotificationMessages?.length - 1].content : item?.latestMessage?.content || 'No message yet';
+                           const allNotificationMessages = notifications?.filter((i) => i.chat._id === item?._id);
 
+                          
+                           const latestChatMessage = allNotificationMessages && allNotificationMessages.length > 0
+                             ? allNotificationMessages[allNotificationMessages.length - 1].content 
+                             : (
+                                
+                                 allChatsMessages?.find((i) => i.chat._id === item?._id)?.messages?.length > 0
+                                   ? allChatsMessages.find((i) => i.chat._id === item?._id).messages[allChatsMessages.find((i) => i.chat._id === item?._id).messages.length - 1].content
+                                   : item?.latestMessage?.content || 'No message yet'
+                               );
+                           
                             return (
                                 <div
                                     key={item?._id}

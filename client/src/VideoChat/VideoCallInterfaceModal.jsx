@@ -19,7 +19,7 @@ const [partnerStream,setPartnerStream]=useState(remoteStream)
 
     useEffect(() => {
         setPartnerStream(remoteStream||remoteVideoRef.current)
-    },[remoteStream,remoteVideoRef.current] 
+    },[remoteStream, remoteVideoRef] 
     )
 console.log(partnerStream)
     return (
@@ -34,8 +34,7 @@ console.log(partnerStream)
                 {partnerStream ? (
                     <>
                         <VideoWrapper stream={partnerStream} isMuted={false} />
-                        <video src={remoteStream}></video>
-                        <video src={remoteVideoRef.current}></video>
+                        
                     </>
                 )
                     : (

@@ -2,7 +2,6 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import connectDB from "./src/db/index.js";
-import cors from "cors";
 import app from "./src/app.js";
 import { chatSockets } from "./src/sockets/chat.sokets.js";
 import { ExpressPeerServer } from "peer";
@@ -35,7 +34,7 @@ await connectDB();
 
   chatSockets(io); // init socket logics
 
-  const port = process.env.PORT;
+  const port = process.env.PORT || 3000;
   httpServer.listen(port, () => {
     console.log(`Worker running at http://localhost:${port}`);
   });

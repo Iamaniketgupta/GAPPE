@@ -21,6 +21,7 @@ import GroupParticipantsSlider from './components/GroupParticipantsSlider';
 // import wallpaper from '../../../../src/assets/chatbg.jpeg';
 import { VideoCallContext } from '../../../Contexts/VideCallContext';
 import { useSocket } from '../../../Contexts/SocketProvider';
+import SearchDrawer from './components/SearchDrawer';
 
 
 const ChatArea = () => {
@@ -34,6 +35,7 @@ const ChatArea = () => {
 
     // GENERAL STATES
     const [isModalOpen, setModalOpen] = useState(false);
+    const [isSarchModalOpen, setSearchModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
     const [currTypingUser, setCurrTypingUser] = useState(null);
@@ -41,11 +43,13 @@ const ChatArea = () => {
     // REFERENCE STATES
     const messagesEndRef = useRef(null);
     // CHAT CONTEXT STATES
-    const { notifications, setNotifications, setLatestMessage, messages, setMessages,setAllChats,allChats } = useChatContext();
+    const { notifications, setNotifications,
+        setLatestMessage, messages, setMessages, setAllChats, allChatsMessages } = useChatContext();
     // VIDEO CALL CONTEXT STATES
     const { setInitCall } = useContext(VideoCallContext);
 
     useEffect(() => {
+        
         if (!socket) return;
 
         socket.on("user online", (data) => {
@@ -65,22 +69,17 @@ const ChatArea = () => {
             setIsTyping(false);
         });
 
-    }, [setOnlineUsers, socket,currSelectedChat]);
+    }, [socket, currSelectedChat, setOnlineUsers]);
 
-
+    useEffect(() => {
+        setMessages(allChatsMessages?.filter((item) => item.chat._id === currSelectedChat?._id)[0]?.messages);
+    },[allChatsMessages, currSelectedChat, setMessages])
+    
     useEffect(() => {
         if (!socket || !currSelectedChat) return;
 
-        setLoading(true);
-        fetchChatMessages(currSelectedChat?._id)
-            .then((res) => {
-                setMessages(res.messages);
-                socket.emit('join chat', currSelectedChat?._id);
-                setNotifications((prev) => prev.filter((i) => i.chat._id !== currSelectedChat?._id));
+        setNotifications((prev) => prev?.filter((i) => i.chat._id !== currSelectedChat?._id));
 
-            })
-            .catch((err) => console.log(err))
-            .finally(() => setLoading(false));
 
         return () => {
             socket.emit('leave chat', currSelectedChat?._id);
@@ -88,33 +87,33 @@ const ChatArea = () => {
     }, [currSelectedChat, socket]);
 
 
-useEffect(() => {
-    if (!socket) return;
-    socket.on('messageReceived', ({newMessageReceived,chat}) => {
+    useEffect(() => {
+        if (!socket) return;
+        socket.on('messageReceived', ({ newMessageReceived, chat }) => {
 
-        if (!currSelectedChat || currSelectedChat?._id !== newMessageReceived.chat?._id) {
-            if (!notifications?.includes(newMessageReceived?.chat?._id)) {
-                setNotifications((prev) => [...prev, newMessageReceived]);
-                setLatestMessage(newMessageReceived);
-                setAllChats((prevChats) => {
-                    const chatExists = prevChats.some((c) => c._id === chat._id);
-                    return chatExists ? prevChats : [chat,...prevChats ];
-                });
-        
+            if (!currSelectedChat || currSelectedChat?._id !== newMessageReceived.chat?._id) {
+                if (!notifications?.includes(newMessageReceived?.chat?._id)) {
+                    setNotifications((prev) => [...prev, newMessageReceived]);
+                    setLatestMessage(newMessageReceived);
+                    setAllChats((prevChats) => {
+                        const chatExists = prevChats.some((c) => c._id === chat._id);
+                        return chatExists ? prevChats : [chat, ...prevChats];
+                    });
+
+                }
+
+            }
+            else {
+                setMessages((prev) => [...prev, newMessageReceived]);
+
             }
 
-        }
-        else{
-            setMessages((prev) => [...prev, newMessageReceived]);
-      
-        }
+        });
+        return () => {
+            socket.off('messageReceived');
+        };
 
-    });
-    return () => {
-        socket.off('messageReceived'); 
-    };
-
-}, [currSelectedChat,socket]);
+    }, [currSelectedChat, socket]);
 
 
     useEffect(() => {
@@ -127,6 +126,28 @@ useEffect(() => {
         messagesEndRef.current?.scrollIntoView({});
     }, [messages, isTyping]);
 
+
+    const downloadFile = async (url, fileName) => {
+        try {
+            const response = await fetch(url, { method: 'GET' });
+            if (!response.ok) throw new Error('Failed to fetch file');
+    
+            const blob = await response.blob();
+            const downloadUrl = window.URL.createObjectURL(blob);
+    
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = fileName;
+            document.body.appendChild(link); 
+            link.click();
+            document.body.removeChild(link); 
+            window.URL.revokeObjectURL(downloadUrl); 
+    
+        } catch (error) {
+            console.error('Error downloading file:', error);
+        }
+    };
+    
     return (
         <div className='w-full h-full flex  flex-col ' >
 
@@ -146,6 +167,11 @@ useEffect(() => {
 
                     <ModalWrapper open={isModalOpen} setOpenModal={setModalOpen}>
                         {currSelectedChat?.isGroupChat ? <GroupChat setOpenModal={setModalOpen} data={currSelectedChat} /> : <OneonOneChat setOpenModal={setModalOpen} data={getSenderDetails(currentUser, currSelectedChat?.users)} />}
+                    </ModalWrapper>
+
+                    {/* SEARCH MODAL WRAPPER */}
+                    <ModalWrapper open={isSarchModalOpen} setOpenModal={setSearchModalOpen} outsideClickClose={false}>
+                        <SearchDrawer setOpenModal={setSearchModalOpen} messages={messages} />
                     </ModalWrapper>
 
 
@@ -197,7 +223,10 @@ useEffect(() => {
 
                                 </>
                             }
-                            <IoSearch className='cursor-pointer hover:text-gray-500 text-gray-600 dark:text-gray-300 ' />
+                            <IoSearch onClick={() => {
+                                setSearchModalOpen(true)
+                            }}
+                             className='cursor-pointer hover:text-gray-500 text-gray-600 dark:text-gray-300 ' />
                             <PiDotsThreeOutlineVerticalFill title='Options' className='text-xl cursor-pointer hover:text-gray-500 text-gray-600 dark:text-gray-300' />
                         </div>
                     </div>
@@ -207,10 +236,10 @@ useEffect(() => {
 
                     <div className='flex-grow relative overflow-y-scroll p-5 lg:p-10 '
                         style={{ scrollbarWidth: 'thin' }}>
-
+                        {/* 
                         <p className='dark:text-stone-400 text-gray-400 w-fit px-4 mb-4 py-[2px] mx-auto text-xs bg-slate-50 dark:bg-stone-700 rounded-full'>
                             All messages are end-to-end encrypted
-                        </p>
+                        </p> */}
 
                         {loading ? (
                             <div className='flex items-center justify-center'>
@@ -218,28 +247,54 @@ useEffect(() => {
                             </div>
                         ) : (
                             <div className='w-full flex relative flex-col my-1 p-4'>
-                                {messages && messages.map((message, index) => {
-                                    const showDateSeparator = index === 0 || !isSameDay(message.createdAt, messages[index - 1].createdAt);
+                                {/* {messages && messages.map((message, index) => { */}
+                                {messages?.map((message, index, arr) => {
+                                    const showDateSeparator = index === 0 || !isSameDay(message?.createdAt, arr[index - 1]?.createdAt);
 
                                     return (
-                                        <div key={message._id} className=''>
+                                        <div id={message._id} key={message._id}>
                                             {/* Date stamps separator */}
                                             {showDateSeparator && (
                                                 <div className='w-full flex justify-center my-2 '>
-                                                    <p className='text-xs text-gray-500  px-3 py-1 bg-gray-100 rounded-full'>
+                                                    <p className='text-xs text-gray-500 px-3 py-1 bg-gray-100 rounded-full'>
                                                         {formatDate(message?.createdAt)}
                                                     </p>
                                                 </div>
                                             )}
-                                            {/*  Chat message */}
-                                            <div className={`w-full flex my-1 ${message.sender._id === currentUser?._id ? "justify-end" : "justify-start"}`}>
+
+                                            {/* Chat message */}
+                                            <div  className={`w-full flex my-1 ${message.sender._id === currentUser?._id ? "justify-end" : "justify-start"}`}>
                                                 <div className={`max-w-[75%] px-4 py-2 rounded-lg shadow-md ${message.sender._id === currentUser?._id ? "bg-gray-700 text-white" : "bg-blue-600 text-white"} `}>
                                                     <p className={`text-xs font-semibold ${message.sender._id === currentUser?._id ? "text-gray-300" : "text-blue-300"} mb-1`}>
                                                         {message.sender._id === currentUser?._id ? "You" : message.sender?.userName || message.sender?.fullName}
                                                     </p>
-                                                    <p className="text-sm leading-relaxed">
-                                                        {message.content}
-                                                    </p>
+                                                    <div className="text-sm leading-relaxed">
+                                                        {message.content ||
+                                                            (message.media?.url && (
+                                                                <div
+                                                                    onClick={() => downloadFile(message?.media?.url, message?.media?.fileName)}
+                                                                    className="cursor-pointer rounded-lg bg-gray-100 dark:bg-stone-700 p-4 shadow-md transition-transform transform hover:scale-105 hover:shadow-lg"
+                                                                >
+                                                                    <div className="flex items-center gap-4">
+                                                                        {/* File Icon or Thumbnail */}
+                                                                        <div className="flex items-center justify-center bg-blue-500 text-white min-h-12 min-w-12 text-xl">
+                                                                            {message?.media?.fileType === 'image' ? <img className='object-cover w-12 h-12' src={message?.media?.url} alt={message?.media?.fileName} /> : '📄'}
+                                                                        </div>
+
+                                                                        {/* File Details */}
+                                                                        <div className="flex flex-col">
+                                                                            <span className="text-sm text-gray-700 dark:text-stone-200 font-semibold">
+                                                                                {message?.media?.fileName}
+                                                                            </span>
+                                                                            <span className="text-xs text-gray-500 dark:text-stone-400">
+                                                                                {message?.media?.fileType.toUpperCase()} • {(message?.media?.fileSize/(1024*1024))?.toFixed(2)} MB
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+
+                                                    </div>
                                                     <div className={`text-[10px] text-right ${message.sender._id === currentUser?._id ? "text-gray-300" : "text-blue-300"}`}>
                                                         {formatTime(message.createdAt)}
                                                     </div>
@@ -248,6 +303,7 @@ useEffect(() => {
                                         </div>
                                     );
                                 })}
+
                                 {isTyping && getSenderDetails(currentUser, currSelectedChat?.users) &&
                                     <>
                                         <TypingLoader />

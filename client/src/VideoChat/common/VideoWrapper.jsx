@@ -11,6 +11,7 @@ const VideoWrapper = ({ stream, isMuted ,pipe}) => {
       controls={false}
       pipe={pipe}
       width="100%"
+      aspectRatio="9:16"
       height="100%"
      
       />

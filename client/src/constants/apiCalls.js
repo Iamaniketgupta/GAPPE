@@ -38,7 +38,7 @@ export const fetchAllChats = async () => {
         return res.data;
     } catch (error) {
         console.log(error);
-        toast.error(error?.respose?.data?.message || 'Error fetching chats')
+        // toast.error(error?.respose?.data?.message || 'Error fetching chats')
     }
 }
 
@@ -127,7 +127,11 @@ export const fetchAllChatsMessages = async () => {
 //SEND MESSAGE
 export const sendMessage = async (data) => {
     try {
-        const res = await axiosInstance.post(`/message`, data);
+        const res = await axiosInstance.post(`/message`, data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
         return res.data;
     } catch (error) {
         console.log(error);

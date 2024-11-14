@@ -13,9 +13,13 @@ const messageSchema = new mongoose.Schema({
     },
     content: {
         type: String,
-        required: true,
     },
-
+    media: {
+        url: { type: String },   
+        fileType: { type: String },       
+        fileName: { type: String },        
+        fileSize: { type: Number }        
+    },
     // readBy: [{
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: 'User',

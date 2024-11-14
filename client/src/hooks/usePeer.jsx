@@ -13,18 +13,18 @@ export default function usePeer() {
 
         newPeer.on("open", (id) => {
           if (isMounted) {
-            console.log("Peer initialized with ID:", id);
+            // console.log("Peer initialized with ID:", id);
             setMyPeerId(id);
           }
         });
 
         newPeer.on("disconnected", () => {
-          console.warn("Peer disconnected. Attempting reconnection...");
+          // console.warn("Peer disconnected. Attempting reconnection...");
           newPeer.reconnect();
         });
 
         newPeer.on("close", () => {
-          console.log("Peer connection closed.");
+          // console.log("Peer connection closed.");
         });
 
         newPeer.on("error", (error) => {

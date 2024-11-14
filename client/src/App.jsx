@@ -1,7 +1,6 @@
 
 import { useEffect } from 'react'
 import './App.css'
-import EditorMain from './Editor/EditorMain'
 import ForgotPass from './Pages/Auth/ForgotPass'
 import Login from './Pages/Auth/Login'
 import SignUp from './Pages/Auth/SignUp'
@@ -13,12 +12,9 @@ import { useRecoilState } from 'recoil'
 import { userData } from './atoms/state'
 import Dashboard from './Pages/Dashboard/Dashboard.jsx'
 import { getCookie, removeCookie } from './constants/cookiesApis.js'
-import { ChatProvider } from './Contexts/ChatProvider.jsx'
 import axiosInstance from './constants/axiosInstance.js'
 import NotFoundPage from './Pages/NotFound/NotFoundPage.jsx'
-import VideoCall from './VideoChat/VideoCall.jsx'
-import { VideoCallProvider } from './Contexts/VideCallContext.jsx'
-import { SocketProvider } from './Contexts/SocketProvider.jsx'
+
 function App() {
   const [currentUserData, setUserData] = useRecoilState(userData);
   const navigate = useNavigate();
@@ -52,13 +48,11 @@ function App() {
     <Routes>
       <Route path='*' element={<NotFoundPage />}></Route>
       <Route path='/' element={<Home />}></Route>
-      <Route path='/editor/:docId' element={<EditorMain />}></Route>
       <Route path='/login' element={<Login />}></Route>
       <Route path='/signup' element={<SignUp />}></Route>
       <Route path='/forgot/password' element={<ForgotPass />}></Route>
       <Route path='/resetpassword/:token' element={<VerificationPage />}></Route>
       
-      <Route path='/v' element={<VideoCall />}></Route>
       <Route path='/dashboard' element={ <Dashboard /> }>
       </Route>
       
