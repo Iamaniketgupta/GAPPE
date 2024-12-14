@@ -61,7 +61,7 @@ export const ChatProvider = ({ children }) => {
     }, [currUser, token]);
 
 
-
+// console.log(messages)
     return (
         <ChatContext.Provider value={{
             allUsers, allChats,

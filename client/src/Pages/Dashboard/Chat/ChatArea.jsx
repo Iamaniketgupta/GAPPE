@@ -46,7 +46,7 @@ const ChatArea = () => {
         setLatestMessage, messages, setMessages, setAllChats, allChatsMessages } = useChatContext();
     // VIDEO CALL CONTEXT STATES
     const { setInitCall } = useContext(VideoCallContext);
-
+// console.log({all:allChatsMessages})
     useEffect(() => {
 
         if (!socket) return;
@@ -62,7 +62,7 @@ const ChatArea = () => {
         if (currSelectedChat) {
             socket.emit('join chat', currSelectedChat?._id);
         }
-       
+
 
         return () => {
             // socket.off('user online');
@@ -85,12 +85,12 @@ const ChatArea = () => {
             setIsTyping(false);
             setCurrTypingUser(null);
         });
-    }, [socket,currSelectedChat]);
+    }, [socket, currSelectedChat]);
 
 
     useEffect(() => {
-        setMessages(allChatsMessages?.filter((item) => item.chat._id === currSelectedChat?._id)[0]?.messages);
-    }, [allChatsMessages, currSelectedChat, setMessages])
+        setMessages(allChatsMessages?.filter((item) => item.chat._id === currSelectedChat?._id)[0]?.messages || []);
+    }, [allChatsMessages, currSelectedChat])
 
     useEffect(() => {
         if (!socket || !currSelectedChat) return;
@@ -107,7 +107,7 @@ const ChatArea = () => {
     useEffect(() => {
         if (!socket) return;
         socket.on('messageReceived', ({ newMessageReceived, chat }) => {
-// console.log(newMessageReceived)
+            // console.log(newMessageReceived)
             if (!currSelectedChat || currSelectedChat?._id !== newMessageReceived.chat?._id) {
                 if (!notifications?.includes(newMessageReceived?.chat?._id)) {
                     setNotifications((prev) => [...prev, newMessageReceived]);

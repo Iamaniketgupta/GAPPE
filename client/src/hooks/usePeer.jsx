@@ -28,12 +28,12 @@ export default function usePeer() {
         });
 
         newPeer.on("error", (error) => {
-          console.log(error)
-          console.error("Peer error:");
+          // console.log(error)
+          // console.error("Peer error:");
         });
 
       } catch (error) {
-        console.error("Error initializing PeerJS:", error);
+        // console.error("Error initializing PeerJS:", error);
       }
 
     return () => {

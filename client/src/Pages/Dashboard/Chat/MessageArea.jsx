@@ -8,6 +8,7 @@ import { useRecoilState } from 'recoil';
 import { userData } from '../../../atoms/state';
 import { useSocket } from '../../../Contexts/SocketProvider';
 import { toast } from 'react-toastify';
+import { useChatContext } from '../../../Contexts/ChatProvider';
 
 const MessageArea = ({
   currSelectedChat,
@@ -21,8 +22,10 @@ const MessageArea = ({
   const [currentUser] = useRecoilState(userData);
   const [typing, setTyping] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+const  {allChatsMessages } = useChatContext();
 
-  // Initialize Speech Recognition
+
+  //  Speech Recognition
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const recognition = new SpeechRecognition();
 
@@ -63,15 +66,17 @@ const MessageArea = ({
   const handleSendMessage = (file = null) => {
     if (message.trim() || file) {
       const data = new FormData();
+
       data.append("chatId", currSelectedChat._id);
       data.append("content", message);
       if (file) data.append("media", file);
 
       sendMessage(data)
         .then((res) => {
-          console.log(res)
+          // console.log(all)
           socket?.emit('new message', res.message);
           setMessages((prev) => [...prev, res.message]);
+          allChatsMessages?.find((chat) => chat?.chat?._id === currSelectedChat?._id)?.messages?.push(res.message);
           setMessage('');
         })
         .catch((err) => {
