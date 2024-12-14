@@ -21,6 +21,7 @@ import GroupParticipantsSlider from './components/GroupParticipantsSlider';
 import { VideoCallContext } from '../../../Contexts/VideCallContext';
 import { useSocket } from '../../../Contexts/SocketProvider';
 import SearchDrawer from './components/SearchDrawer';
+import { all } from 'axios';
 
 
 const ChatArea = () => {
@@ -123,6 +124,7 @@ const ChatArea = () => {
             }
             else {
                 setMessages((prev) => [...prev, newMessageReceived]);
+                allChatsMessages?.filter((item) => item.chat._id === currSelectedChat?._id)[0]?.messages?.push(newMessageReceived);
 
             }
 
