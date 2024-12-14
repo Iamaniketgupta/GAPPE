@@ -113,6 +113,7 @@ const ChatArea = () => {
                 if (!notifications?.includes(newMessageReceived?.chat?._id)) {
                     setNotifications((prev) => [...prev, newMessageReceived]);
                     setLatestMessage(newMessageReceived);
+                    allChatsMessages?.find((chat) => chat?.chat?._id === newMessageReceived?.chat?._id)?.messages?.push(newMessageReceived);
                     toast.success('New Message Received');
                     setAllChats((prevChats) => {
                         const chatExists = prevChats.some((c) => c._id === chat._id);
@@ -124,7 +125,6 @@ const ChatArea = () => {
             }
             else {
                 setMessages((prev) => [...prev, newMessageReceived]);
-                allChatsMessages?.filter((item) => item.chat._id === currSelectedChat?._id)[0]?.messages?.push(newMessageReceived);
 
             }
 
