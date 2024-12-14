@@ -26,17 +26,17 @@ const SidebarItems = [
         title: "Groups",
         icon: <TiGroup title='Groups' />
     },
-    {
-        id: 3,
-        title: "Moods",
-        icon: <SiApostrophe title='Moods' />
-    },
+    // {
+    //     id: 3,
+    //     title: "Moods",
+    //     icon: <SiApostrophe title='Moods' />
+    // },
 
-    {
-        id: 4,
-        title: "Calls",
-        icon: <IoCallSharp title='Calls' />
-    },
+    // {
+    //     id: 4,
+    //     title: "Calls",
+    //     icon: <IoCallSharp title='Calls' />
+    // },
 
 ]
 
@@ -78,7 +78,7 @@ const Sidebar = () => {
                                 key={item.id}
                                 onClick={() => setTab(item.title)}
                                 className={`w-full relative h-10 cursor-pointer flex items-center justify-center rounded-lg transition-shadow duration-300 ${item.title === tab
-                                    ? 'bg-white dark:bg-stone-800 shadow-lg text-blue-600 dark:text-blue-400'
+                                    ? 'bg-white dark:bg-stone-800 shadow-lg border-2 border-stone-300 dark:border-stone-600 text-blue-600 dark:text-blue-400'
                                     : 'hover:shadow-lg hover:text-blue-600 hover:bg-white dark:hover:bg-stone-800  dark:text-blue-400 '
                                     }`}
                                 style={
@@ -109,7 +109,7 @@ const Sidebar = () => {
                     {!mode ? <MdDarkMode className="text-2xl text-blue-800  dark:text-indigo-100 cursor-pointer " onClick={toggleMode} />
                         : <MdLightMode className="text-2xl text-blue-800 dark:text-indigo-100 cursor-pointer" onClick={toggleMode} />
                     }
-                    <IoSettings title='Settings' />
+                    {/* <IoSettings title='Settings' /> */}
                     <ModalWrapper open={isModalOpen} setOpenModal={setIsModalOpen}>
                         <Confirmation handler={hadleLogOut} setOpenModal={setIsModalOpen} />
                     </ModalWrapper>

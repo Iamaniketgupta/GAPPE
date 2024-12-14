@@ -8,6 +8,7 @@ import UsersListShimmer from './Shimmers/UsersListShimmer';
 const AddToGroup = ({
     setValue, allContacts,
     loading, handleAddToGroup,
+    usersChatLoading,
     onSearch, isSelected, allUsers,
     handleRemoveFromGroup, setGroupDrawerValue,
     groupMembers, createGroupLoading }) => {
@@ -52,7 +53,7 @@ const AddToGroup = ({
 
 
             {/* All Users */}
-            {loading ? (
+            {usersChatLoading ? (
                 <div className='flex overflow-y-auto relative max-h-[calc(100vh-100px)] flex-col gap-1 mt-2'>
                     {Array(5).fill().map((_, index) => <UsersListShimmer key={index} />)}
                 </div>

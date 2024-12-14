@@ -11,52 +11,66 @@ export const ChatProvider = ({ children }) => {
     const [allChats, setAllChats] = useState([]);
     const [notifications, setNotifications] = useState([]);
     // const [allNotifications, setAllNotifications] = useState([]);
-    const [latestMessage,setLatestMessage] = useState({});
+    const [latestMessage, setLatestMessage] = useState({});
     const [messages, setMessages] = useState([]);
     const [allChatsMessages, setAllChatsMessages] = useState([]);
-    const token = getCookie('authToken') ;
-    const [currUser]=useRecoilState(userData);
+    const token = getCookie('authToken');
+    const [currUser] = useRecoilState(userData);
     const [currSelectedChat] = useRecoilState(accessedChat);
+    const [chatsloading, setchatLoading] = useState(false);
+    const [messagesloading, setchatmessagesLoading] = useState(false);
+    const [usersChatLoading, setUsersChatsLoading] = useState(false);
 
 
-   const handleFetchChats = () => {
+    const handleFetchChats = () => {
+        setchatLoading(true);
+        fetchAllChats().then((allChats) => {
+            setAllChats(allChats);
+            setchatLoading(false);
+        }).catch((error) => {
+            console.log(error);
+            setchatLoading(false);
 
-    fetchAllChats().then((allChats) => {
-        setAllChats(allChats);
-    }).catch((error) => {
-        console.log(error);
-    });
-     
+        });
+
     }
     useEffect(() => {
-        
+
         if (token) {
             handleFetchChats();
+            setUsersChatsLoading(true);
 
             fetchAllUsers().then((allUsers) => {
+                setUsersChatsLoading(false)
                 setAllUsers(allUsers?.users);
             }).catch((error) => {
                 console.log(error);
+                setUsersChatsLoading(false)
+
             });
-         
-            
+
+
             fetchAllChatsMessages().then((res) => {
                 setAllChatsMessages(res.allChatsMessages);
             }).catch((error) => {
                 // console.log(error);
             });
-            
+
         }
-        
+
     }, [currUser, token]);
-    
+
 
 
     return (
-        <ChatContext.Provider value={{ allUsers, allChats,
-            latestMessage,setLatestMessage, messages, setMessages,
-            notifications, setNotifications,setAllUsers,setAllChats,
-            handleFetchChats ,allChatsMessages,setAllChatsMessages}}>
+        <ChatContext.Provider value={{
+            allUsers, allChats,
+            latestMessage, setLatestMessage, messages, setMessages,
+            notifications, setNotifications, setAllUsers, setAllChats,
+            handleFetchChats, allChatsMessages, setAllChatsMessages,
+            chatsloading, setchatLoading,
+            usersChatLoading, setUsersChatsLoading
+        }}>
             {children}
         </ChatContext.Provider>
     );

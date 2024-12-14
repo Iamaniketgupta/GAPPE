@@ -39,9 +39,9 @@ const OutGoingCallScreen = ({ targetUser, chatId,setIsOpen }) => {
     };
 
     return (
-        <div className="min-w-full min-h-full overflow-y-auto md:grid gap-4 md:grid-cols-2 bg-white dark:bg-stone-800 p-4">
+        <div className="min-w-full h-[100vh] min-h-[700px] overflow-scroll md:grid gap-4 md:grid-cols-2 bg-white dark:bg-stone-800 p-4">
             <div className="bg-slate-100 m-4 max-w-2xl h-fit dark:bg-stone-700 rounded-lg p-3">
-                <div className="bg-black min-h-[420px]">
+                <div className="bg-black min-">
                     <VideoWrapper stream={myStream} isMuted={isMuted} />
                 </div>
 

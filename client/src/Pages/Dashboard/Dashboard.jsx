@@ -53,7 +53,7 @@ const Dashboard = () => {
             <div className='sticky z-50'>
                 <Sidebar />
             </div>
-            <div className='sticky z-10 rounded-t-3xl mb-0 m-1 dark:bg-stone-800 bg-white'>
+            <div className='sticky z-10  rounded-t-3xl mb-0 m-1 dark:bg-stone-800 bg-white'>
                 <CommonDrawer />
                 <DynamicDrawer />
             </div>

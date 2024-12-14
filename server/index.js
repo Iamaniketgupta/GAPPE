@@ -6,7 +6,6 @@ import app from "./src/app.js";
 import { chatSockets } from "./src/sockets/chat.sokets.js";
 import { ExpressPeerServer } from "peer";
 
-// Connect to the database
 await connectDB();
 
 
@@ -24,15 +23,15 @@ await connectDB();
 
 
   const io = new Server(httpServer, {
-     connectionStateRecovery: {}, // connection recovery
+     connectionStateRecovery: {}, 
     cors: {
-      origin: 'https://gappe.vercel.app',
+      origin: process.env.CLIENT_URL || 'https://gappe.vercel.app',
       
     },
     pingTimeout: 60000,
   });
 
-  chatSockets(io); // init socket logics
+  chatSockets(io);
 
   const port = process.env.PORT || 3000;
   httpServer.listen(port, () => {

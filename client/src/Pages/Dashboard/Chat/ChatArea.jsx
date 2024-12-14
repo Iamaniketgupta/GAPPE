@@ -18,7 +18,6 @@ import { formatDate, formatTime, getSenderDetails, isSameDay } from './constants
 import { toast } from 'react-toastify';
 import AddToGroup from '../components/smallComponets/Profiles/components/AddToGroup';
 import GroupParticipantsSlider from './components/GroupParticipantsSlider';
-// import wallpaper from '../../../../src/assets/chatbg.jpeg';
 import { VideoCallContext } from '../../../Contexts/VideCallContext';
 import { useSocket } from '../../../Contexts/SocketProvider';
 import SearchDrawer from './components/SearchDrawer';
@@ -49,7 +48,7 @@ const ChatArea = () => {
     const { setInitCall } = useContext(VideoCallContext);
 
     useEffect(() => {
-        
+
         if (!socket) return;
 
         socket.on("user online", (data) => {
@@ -60,21 +59,39 @@ const ChatArea = () => {
             setOnlineUsers(data);
         });
 
+        if (currSelectedChat) {
+            socket.emit('join chat', currSelectedChat?._id);
+        }
+       
 
+        return () => {
+            // socket.off('user online');
+            // socket.off('user offline');
+            // socket.off('typing');
+            // socket.off('stop typing');
+        };
+
+    }, [socket, currSelectedChat]);
+
+
+
+    useEffect(() => {
+        if (!socket) return;
         socket.on('typing', (data) => {
-            setCurrTypingUser(data)
             setIsTyping(true);
+            setCurrTypingUser(data);
         });
         socket.on('stop typing', (data) => {
             setIsTyping(false);
+            setCurrTypingUser(null);
         });
+    }, [socket,currSelectedChat]);
 
-    }, [socket, currSelectedChat, setOnlineUsers]);
 
     useEffect(() => {
         setMessages(allChatsMessages?.filter((item) => item.chat._id === currSelectedChat?._id)[0]?.messages);
-    },[allChatsMessages, currSelectedChat, setMessages])
-    
+    }, [allChatsMessages, currSelectedChat, setMessages])
+
     useEffect(() => {
         if (!socket || !currSelectedChat) return;
 
@@ -90,11 +107,12 @@ const ChatArea = () => {
     useEffect(() => {
         if (!socket) return;
         socket.on('messageReceived', ({ newMessageReceived, chat }) => {
-
+// console.log(newMessageReceived)
             if (!currSelectedChat || currSelectedChat?._id !== newMessageReceived.chat?._id) {
                 if (!notifications?.includes(newMessageReceived?.chat?._id)) {
                     setNotifications((prev) => [...prev, newMessageReceived]);
                     setLatestMessage(newMessageReceived);
+                    toast.success('New Message Received');
                     setAllChats((prevChats) => {
                         const chatExists = prevChats.some((c) => c._id === chat._id);
                         return chatExists ? prevChats : [chat, ...prevChats];
@@ -131,23 +149,23 @@ const ChatArea = () => {
         try {
             const response = await fetch(url, { method: 'GET' });
             if (!response.ok) throw new Error('Failed to fetch file');
-    
+
             const blob = await response.blob();
             const downloadUrl = window.URL.createObjectURL(blob);
-    
+
             const link = document.createElement('a');
             link.href = downloadUrl;
             link.download = fileName;
-            document.body.appendChild(link); 
+            document.body.appendChild(link);
             link.click();
-            document.body.removeChild(link); 
-            window.URL.revokeObjectURL(downloadUrl); 
-    
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(downloadUrl);
+
         } catch (error) {
             console.error('Error downloading file:', error);
         }
     };
-    
+
     return (
         <div className='w-full h-full flex  flex-col ' >
 
@@ -226,7 +244,7 @@ const ChatArea = () => {
                             <IoSearch onClick={() => {
                                 setSearchModalOpen(true)
                             }}
-                             className='cursor-pointer hover:text-gray-500 text-gray-600 dark:text-gray-300 ' />
+                                className='cursor-pointer hover:text-gray-500 text-gray-600 dark:text-gray-300 ' />
                             <PiDotsThreeOutlineVerticalFill title='Options' className='text-xl cursor-pointer hover:text-gray-500 text-gray-600 dark:text-gray-300' />
                         </div>
                     </div>
@@ -263,7 +281,7 @@ const ChatArea = () => {
                                             )}
 
                                             {/* Chat message */}
-                                            <div  className={`w-full flex my-1 ${message.sender._id === currentUser?._id ? "justify-end" : "justify-start"}`}>
+                                            <div className={`w-full flex my-1 ${message.sender._id === currentUser?._id ? "justify-end" : "justify-start"}`}>
                                                 <div className={`max-w-[75%] px-4 py-2 rounded-lg shadow-md ${message.sender._id === currentUser?._id ? "bg-gray-700 text-white" : "bg-blue-600 text-white"} `}>
                                                     <p className={`text-xs font-semibold ${message.sender._id === currentUser?._id ? "text-gray-300" : "text-blue-300"} mb-1`}>
                                                         {message.sender._id === currentUser?._id ? "You" : message.sender?.userName || message.sender?.fullName}
@@ -287,7 +305,7 @@ const ChatArea = () => {
                                                                                 {message?.media?.fileName}
                                                                             </span>
                                                                             <span className="text-xs text-gray-500 dark:text-stone-400">
-                                                                                {message?.media?.fileType.toUpperCase()} • {(message?.media?.fileSize/(1024*1024))?.toFixed(2)} MB
+                                                                                {message?.media?.fileType.toUpperCase()} • {(message?.media?.fileSize / (1024 * 1024))?.toFixed(2)} MB
                                                                             </span>
                                                                         </div>
                                                                     </div>

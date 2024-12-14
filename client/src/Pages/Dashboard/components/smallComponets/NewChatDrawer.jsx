@@ -11,7 +11,7 @@ import { IoArrowBackSharp } from 'react-icons/io5';
 
 
 const NewChatDrawer = () => {
-    const { allUsers, setAllUsers ,handleFetchChats} = useChatContext();
+    const { allUsers, setAllUsers ,handleFetchChats,usersChatLoading} = useChatContext();
     const [loading, setLoading] = useState(false);
     const [accessChatLoading, setAcessChatLoading] = useState(false);
     const [currSelectedChat,setCurrSelectedChat] = useRecoilState(accessedChat);
@@ -71,7 +71,7 @@ const NewChatDrawer = () => {
             <div className='dark:bg-stone-700 bg-gray-200 w-full h-[1px]' />
             {/* All Users */}
             {
-                loading ?
+                usersChatLoading ?
                     (<div className='flex overflow-y-auto  relative max-h-[calc(100vh-100px)] flex-col gap-1 mt-2'
                         style={{ scrollbarWidth: 'thin', scrollbarColor: 'blue' }}>
                         {Array(5).fill().map((_, index) => <UsersListShimmer key={index} />)}

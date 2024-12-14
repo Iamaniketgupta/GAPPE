@@ -10,6 +10,7 @@ export const chatSockets = (io) => {
         // USER ONLINE
         socket.on('setup', (data) => {
             socket.join(data?._id);
+            console.log(data)
             onlineUsers.set(data._id, socket.id);
             io.emit('user online', Array.from(onlineUsers.keys()));
             socket.emit('connected');
@@ -18,6 +19,7 @@ export const chatSockets = (io) => {
         });
 
         socket.on('join chat', (room) => {
+            console.log(room,22)
             socket.join(room);
             console.log(`User joined room: ${room}`);
 
@@ -43,8 +45,8 @@ export const chatSockets = (io) => {
         // TYPING
         socket.on('typing', (data) => {
             const { roomId, user } = data
-            console.log(roomId,'is TYPING')
             if (socket.rooms.has(roomId)) {
+                console.log(roomId,'is TYPING')
                 socket.to(roomId).emit('typing', user);
             }
 

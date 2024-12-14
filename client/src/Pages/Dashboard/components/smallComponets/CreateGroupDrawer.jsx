@@ -15,7 +15,7 @@ import AddToGroup from './AddToGroup';
 
 
 const CreateGroupDrawer = () => {
-    const { allUsers, setAllUsers ,handleFetchChats} = useChatContext();
+    const { allUsers, setAllUsers, handleFetchChats, usersChatLoading } = useChatContext();
     const [loading, setLoading] = useState(false);
     const [createGroupLoading, setCreateGroupLoading] = useState(false);
     const [value, setValue] = useRecoilState(commonDrawer)
@@ -70,15 +70,15 @@ const CreateGroupDrawer = () => {
             setAllContacts(allUsers);
             handleFetchChats();
             setValue(null);
-            
+
 
         })
-        .catch((err) => {
-            toast.error(err?.response?.data?.message);
-        })
-        .finally(() => {
-            setCreateGroupLoading(false)
-        });
+            .catch((err) => {
+                toast.error(err?.response?.data?.message);
+            })
+            .finally(() => {
+                setCreateGroupLoading(false)
+            });
     }
 
 
@@ -89,6 +89,7 @@ const CreateGroupDrawer = () => {
 
                 groupDrawerValue === "AddToGroup" && (
                     <AddToGroup
+                        usersChatLoading={usersChatLoading}
                         allContacts={allContacts}
                         setGroupDrawerValue={setGroupDrawerValue}
                         loading={loading}

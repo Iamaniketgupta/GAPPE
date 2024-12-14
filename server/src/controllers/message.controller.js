@@ -10,7 +10,6 @@ import { deleteFromCloudinary, publicId, uploadToCloudinary } from "../utils/clo
 
 export const sendMessage = expressAsyncHandler(async (req, res) => {
     const { chatId, content } = req.body;
-    console.log(chatId, content,req.file);
     if (!chatId) {
         return res.status(400).json({ message: "Invalid Chat ID" });
     }
