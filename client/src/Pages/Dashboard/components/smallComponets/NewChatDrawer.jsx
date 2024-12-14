@@ -71,7 +71,7 @@ const NewChatDrawer = () => {
             <div className='dark:bg-stone-700 bg-gray-200 w-full h-[1px]' />
             {/* All Users */}
 
-            <div className='h-[calc(100vh-100px)] relative overflow-y-auto' style={{scrollbarWidth: 'thin'}}>
+            <div className='h-[calc(100vh-100px)] relative overflow-y-scroll' style={{scrollbarWidth: 'thin'}}>
                 {
                     usersChatLoading ?
                         (<div className='flex overflow-y-auto  relative max-h-[calc(100vh-100px)] flex-col gap-1 mt-2'
