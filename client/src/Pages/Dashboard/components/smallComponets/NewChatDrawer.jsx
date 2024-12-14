@@ -71,15 +71,15 @@ const NewChatDrawer = () => {
             <div className='dark:bg-stone-700 bg-gray-200 w-full h-[1px]' />
             {/* All Users */}
 
-            <div className='h-[calc(100vh-200px)]  overflow-y-scroll' style={{scrollbarWidth: 'none'}}>
+            <div className='  overflow-y-auto' style={{scrollbarWidth: 'none'}}>
                 {
                     usersChatLoading ?
                         (<div className='flex overflow-y-auto  relative max-h-[calc(100vh-100px)] flex-col gap-1 mt-2'
                             style={{ scrollbarWidth: 'thin', scrollbarColor: 'blue' }}>
                             {Array(5).fill().map((_, index) => <UsersListShimmer key={index} />)}
                         </div>)
-                        : (<div className='flex overflow-y-auto relative max-h-[calc(100vh-200px)] flex-col gap-1 mt-2'
-                            style={{ scrollbarWidth: 'thin', scrollbarColor: 'blue' }}>
+                        : (<div className='flex overflow-y-auto relative max-h-[calc(100vh-230px)] flex-col gap-1 mt-2'
+                            style={{ scrollbarWidth: 'thin' }}>
                             {allUsers?.map((item) =>
                                 <div key={item._id} onClick={() => handleAccessChat(item._id)} className='relative flex items-center hover:bg-stone-100 dark:hover:bg-stone-700  gap-5 cursor-pointer py-2 bg-white dark:bg-stone-800 dark:text-white'
                                 >

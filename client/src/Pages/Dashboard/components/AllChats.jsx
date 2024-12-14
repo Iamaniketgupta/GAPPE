@@ -115,17 +115,17 @@ const AllChats = () => {
             
             {
                 chatsloading ?
-                    (<div className='flex overflow-y-auto  relative max-h-[calc(100vh-100px)] flex-col gap-1 mt-2'
+                    (<div className='flex overflow-y-auto  relative max-h-[calc(100vh-200px)] flex-col gap-1 mt-2'
                         style={{ scrollbarWidth: 'none', scrollbarColor: 'blue' }}>
                         {Array(5).fill().map((_, index) => <UsersListShimmer key={index} />)}
                     </div>) :
-                    fetchAllChats.length === 0 && !chatsloading  ? (
-                        <div className='flex justify-center items-center h-[calc(100vh-100px)]'>
-                            <p className='text-2xl font-semibold text-gray-500 dark:text-gray-300'>No Chats</p>
+                    allChats.length === 0 && !chatsloading  ? (
+                        <div className='flex justify-center items-center h-[calc(100vh-200px)]'>
+                            <p className='  text-gray-500 dark:text-gray-300'>No Chats</p>
                         </div>
                     ):
-                    (<div className='flex overflow-y-auto relative max-h-[calc(100vh-10px)] flex-col gap-2'
-                        style={{ scrollbarWidth: 'none', scrollbarColor: 'blue' }}>
+                    (<div className='flex overflow-y-auto  max-h-[calc(100vh-140px)] flex-col gap-2'
+                        style={{ scrollbarWidth: 'thin', scrollbarColor: 'blue' }}>
                         {filterChats?.map((item) => {
                            const allNotificationMessages = notifications?.filter((i) => i.chat._id === item?._id);
 
@@ -176,7 +176,10 @@ const AllChats = () => {
 
                         }
                         )}
-                    </div>)
+                   
+                    </div>
+                )
+                    
             }
 
 
