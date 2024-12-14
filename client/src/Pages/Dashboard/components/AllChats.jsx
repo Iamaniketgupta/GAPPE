@@ -112,12 +112,18 @@ const AllChats = () => {
             </div>
 
             {/* Chats and groups */}
+            
             {
                 chatsloading ?
                     (<div className='flex overflow-y-auto  relative max-h-[calc(100vh-100px)] flex-col gap-1 mt-2'
                         style={{ scrollbarWidth: 'none', scrollbarColor: 'blue' }}>
                         {Array(5).fill().map((_, index) => <UsersListShimmer key={index} />)}
                     </div>) :
+                    fetchAllChats.length === 0 && !chatsloading  ? (
+                        <div className='flex justify-center items-center h-[calc(100vh-100px)]'>
+                            <p className='text-2xl font-semibold text-gray-500 dark:text-gray-300'>No Chats</p>
+                        </div>
+                    ):
                     (<div className='flex overflow-y-auto relative max-h-[calc(100vh-10px)] flex-col gap-2'
                         style={{ scrollbarWidth: 'none', scrollbarColor: 'blue' }}>
                         {filterChats?.map((item) => {
