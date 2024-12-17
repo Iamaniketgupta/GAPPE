@@ -128,10 +128,10 @@ const  {allChatsMessages } = useChatContext();
   };
 
   return (
-    <div className='w-full relative bg-gray-200 border-t dark:border-stone-800 dark:bg-stone-900 dark:text-gray-300 px-6 py-4 h-16 flex items-center'>
+    <div className='w-full max-sm:text-xs relative bg-gray-200 border-t dark:border-stone-800 dark:bg-stone-900 dark:text-gray-300 px-3 md:px-6 py-4 h-16 flex items-center'>
       
       {/* Left icons (smile, add icon) */}
-      <div className='flex items-center text-2xl text-gray-600 dark:text-gray-300 gap-3'>
+      <div className='flex items-center text-xl md:text-2xl text-gray-600 dark:text-gray-300 gap-3'>
         <FaRegSmile className='cursor-pointer' onClick={() => setShowEmojiPicker(!showEmojiPicker)} />
         <label htmlFor="file">
           <IoAdd className='cursor-pointer' />
@@ -145,7 +145,7 @@ const  {allChatsMessages } = useChatContext();
           <EmojiPicker
             height={350}
             emojiStyle="facebook"
-            width="20rem"
+            width="17rem"
             lazyLoadEmojis={true}
             onEmojiClick={onEmojiClick} />
         </div>
@@ -158,10 +158,10 @@ const  {allChatsMessages } = useChatContext();
         onChange={handleChange}
         placeholder="Type a message"
         className='flex-grow bg-white dark:bg-stone-700 text-gray-800 dark:text-gray-300 resize-none 
-          h-10 p-2 px-4 rounded-lg mx-4 border-0 outline-none'
+          max-h-40 placeholder:py-2 px-4 rounded mx-4 border-0 outline-none'
       />
 
-      <div className='text-2xl text-gray-600 dark:text-gray-300'>
+      <div className=' text-xl md:text-2xl text-gray-600 dark:text-gray-300'>
         {message.trim() ? (
           <RiSendPlane2Fill onClick={() => handleSendMessage()} className='cursor-pointer' />
         ) : (

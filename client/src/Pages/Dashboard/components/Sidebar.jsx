@@ -63,11 +63,11 @@ const Sidebar = () => {
 
 
     return (
-        <div className='bg-white dark:bg-stone-900 h-screen p-2 min-w-14 shadow-lg overflow-clip'>
+        <div className='bg-white dark:bg-stone-900 h-screen p-1 md:p-2 md:min-w-14 max-sm:w-10 shadow-lg overflow-clip'>
 
             <div className='flex flex-col py-5 pb-10 justify-between  h-full text-xl text-blue-500'>
                 <img onClick={() => setValue("Profile")} title='My Profile' src={currUser?.avatar}
-                    className='w-10 h-10 p-[2px] bg-white cursor-pointer rounded-full'
+                    className='w-8 h-8 md:w-10 md:h-10 p-[2px] bg-white cursor-pointer rounded-full'
                     style={{ boxShadow: '0 0 5px 0 rgba(0, 0, 0, 0.2)' }}
                     alt={currUser?.fullName} />
 
@@ -77,7 +77,7 @@ const Sidebar = () => {
                             <div
                                 key={item.id}
                                 onClick={() => setTab(item.title)}
-                                className={`w-full relative h-10 cursor-pointer flex items-center justify-center rounded-lg transition-shadow duration-300 ${item.title === tab
+                                className={`w-full relative h-8 md:h-10 cursor-pointer flex items-center justify-center rounded-lg transition-shadow duration-300 ${item.title === tab
                                     ? 'bg-white dark:bg-stone-800 shadow-lg border-2 border-stone-300 dark:border-stone-600 text-blue-600 dark:text-blue-400'
                                     : 'hover:shadow-lg hover:text-blue-600 hover:bg-white dark:hover:bg-stone-800  dark:text-blue-400 '
                                     }`}

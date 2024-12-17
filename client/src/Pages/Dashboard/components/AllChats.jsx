@@ -76,7 +76,7 @@ const AllChats = () => {
  
 
     return (
-        <div className=' w-full relative '>
+        <div className=' w-full  relative '>
             <div className='sticky top-0 z-10 '>
 
                 <div className='flex items-center  justify-between'>
@@ -124,7 +124,7 @@ const AllChats = () => {
                             <p className='  text-gray-500 dark:text-gray-300'>No Chats</p>
                         </div>
                     ):
-                    (<div className='flex overflow-y-auto  max-h-[calc(100vh-140px)] flex-col gap-2'
+                    (<div className='flex overflow-y-auto  min-h-full max-h-[calc(100vh-140px)]  flex-col gap-2'
                         style={{ scrollbarWidth: 'thin', scrollbarColor: 'blue' }}>
                         {filterChats?.map((item) => {
                            const allNotificationMessages = notifications?.filter((i) => i.chat._id === item?._id);
@@ -143,7 +143,7 @@ const AllChats = () => {
                                 <div
                                     key={item?._id}
                                     onClick={() => setCurrSelectedChat(item)}
-                                    className='relative flex items-center hover:bg-stone-100 dark:hover:bg-stone-700 gap-5 cursor-pointer py-2 bg-white dark:bg-stone-800 dark:text-white'
+                                    className='relative  flex items-center hover:bg-stone-100 dark:hover:bg-stone-700 gap-5 cursor-pointer py-2 bg-white dark:bg-stone-800 dark:text-white'
                                 >
 
                                     <img

@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 import { useRecoilState } from 'recoil';
-import { accessedChat, allChatsMessagesState, userData } from '../../atoms/state';
+import { accessedChat, allChatsMessagesState, commonDrawer, userData } from '../../atoms/state';
 import ChatArea from './Chat/ChatArea';
 import Sidebar from './components/Sidebar';
 import DynamicDrawer from './components/DynamicDrawer';
@@ -18,6 +18,9 @@ import { getSenderDetails } from './Chat/constants';
 const Dashboard = () => {
     const [currUser] = useRecoilState(userData);
     const [currSelectedChat] = useRecoilState(accessedChat);
+    const [value, setValue] = useRecoilState(commonDrawer)
+    const [collapse, setCollapse] = useState(false)
+    const [showDrawer, setShowDrawer] = useState(true)
 
     const [allChatsWithMessages, setAllChatMessages] = useRecoilState(allChatsMessagesState);
     const [loading, setLoading] = useState(false);
@@ -26,6 +29,18 @@ const Dashboard = () => {
         , callAccepted, setCallAccepted, receiverStatus, setReceiverStatus, initCall, setInitCall } = useContext(VideoCallContext);
     const [open, setOpen] = useState(false);
 
+    useEffect(() => {
+        if(currSelectedChat)
+        setShowDrawer(false);
+    },[currSelectedChat]);
+
+    useEffect(() => {
+        if(value)
+        setShowDrawer(true);
+    else {
+        if(currSelectedChat)
+        setShowDrawer(false)};
+    },[value,currSelectedChat]);
 
     useEffect(() => {
         if (!loading && currUser) {
@@ -50,18 +65,19 @@ const Dashboard = () => {
 
     return (
         <div className='relative flex h-screen overflow-clip w-full bg-gray-100 dark:bg-stone-700'>
-            <div className='sticky z-50'>
+            <div className='sticky z-50 '>
                 <Sidebar />
             </div>
-            <div className='sticky z-10  rounded-t-3xl mb-0 m-1 dark:bg-stone-800 bg-white'>
+            <div className={`sticky z-10  max-sm:w-screen md:max-w-[400px] rounded-t-xl md:rounded-t-2xl  p-1 max-sm:text-sm mb-0 ${!showDrawer ? 'max-sm:hidden' : ''}`}>
                 <CommonDrawer />
-                <DynamicDrawer />
-            </div>
-            <div className='dark:bg-stone-800 bg-white w-full rounded-t-3xl mt-1 mr-1 overflow-clip'
-                style={{ scrollbarWidth: 'thin' }}>
-                <ChatArea setInitCall={setInitCall} />
+                <DynamicDrawer collapse={collapse} setCollapse={setCollapse} />
             </div>
 
+            {/* Main content area */}
+            <div className={`dark:bg-stone-800 bg-white flex flex-1 md:w-full rounded-t-xl md:rounded-t-2xl max-sm:text-sm mt-1 mr-1 overflow-clip ${showDrawer ? 'max-sm:hidden' : ''}`}
+                style={{ scrollbarWidth: 'thin' }}>
+                <ChatArea setShowDrawer={setShowDrawer} setInitCall={setInitCall} />
+            </div>
 
             <ModalWrapper open={open} setOpenModal={setOpen}>
                 <IncomingCallBox
@@ -72,11 +88,11 @@ const Dashboard = () => {
                 />
             </ModalWrapper>
 
-           
-                <ModalWrapper open={receiverStatus} setOpenModal={setReceiverStatus}>
-                    <ReceiverStatusBox receiverStatus={receiverStatus} />
-                </ModalWrapper>
-            
+
+            <ModalWrapper open={receiverStatus} setOpenModal={setReceiverStatus}>
+                <ReceiverStatusBox receiverStatus={receiverStatus} />
+            </ModalWrapper>
+
 
             <ModalWrapper open={callAccepted} outsideClickClose={false} setOpenModal={setCallAccepted}>
                 <VideoCallInterfaceModal />

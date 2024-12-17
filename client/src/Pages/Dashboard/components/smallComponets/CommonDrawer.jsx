@@ -15,7 +15,7 @@ const CommonDrawer = () => {
 
     if (!value ) return null;
     return (
-        <div className={`${!value ? 'absolute z-20 translate-x-[-100%]' : 'translate-x-0'}  shadow-lg dark:bg-stone-800 min-h-full max-h-screen  p-5  max-w-[400px] min-w-[320px]  transition-all ease-in-out delay-100 duration-100`}>
+        <div className={`${!value ? 'absolute z-30 translate-x-[-100%]' : 'translate-x-0'}  shadow-lg dark:bg-stone-800 min-h-full max-h-screen  p-2 md:p-5  min-w-full md:max-w-[400px] md:min-w-[320px]  transition-all ease-in-out delay-100 duration-100`}>
         
                 {
                     value === "New Chat" && <NewChatDrawer /> ||

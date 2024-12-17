@@ -52,7 +52,7 @@ const NewChatDrawer = () => {
     return (
         <div>
             {/* header */}
-            <div className='flex  min-w-full items-center justify-between  h-10 p-4'>
+            <div className='flex  min-w-full items-center justify-between  h-10 p-4 '>
                 <IoArrowBackSharp onClick={() => setValue(null)} className='cursor-pointer text-xl' />
                 <p className='ml-2 font-semibold text-gray-900 dark:text-gray-300'>{"New Chat"}</p>
             </div>

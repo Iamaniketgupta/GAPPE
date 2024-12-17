@@ -2,7 +2,7 @@ import { IoSearch } from 'react-icons/io5';
 import { PiDotsThreeOutlineVerticalFill } from 'react-icons/pi';
 import MessageArea from './MessageArea';
 import { FaVideo } from "react-icons/fa";
-import { MdCall } from "react-icons/md";
+import { MdCall, MdClose } from "react-icons/md";
 import { useRecoilState } from 'recoil';
 import { accessedChat, onlineUsersState, userData } from '../../../atoms/state';
 import ModalWrapper from '../../../common/ModalWrapper';
@@ -24,12 +24,12 @@ import SearchDrawer from './components/SearchDrawer';
 import { all } from 'axios';
 
 
-const ChatArea = () => {
+const ChatArea = ({setShowDrawer}) => {
     // SOCKET HOOK
     const socket = useSocket();
 
     // RECOIL STATES
-    const [currSelectedChat] = useRecoilState(accessedChat);
+    const [currSelectedChat,setCurrSelectedChat] = useRecoilState(accessedChat);
     const [currentUser] = useRecoilState(userData);
     const [onlineUsers, setOnlineUsers] = useRecoilState(onlineUsersState);
 
@@ -196,13 +196,21 @@ const ChatArea = () => {
 
 
                     {/* header */}
-                    <div className='sticky top-0 w-full h-14  items-center p-3 flex justify-between bg-stone-50 dark:bg-stone-800'>
+                    <div className='sticky top-0 w-full h-14  items-center p-1 pr-3 shadow-xl md:p-3 flex justify-between bg-stone-50 dark:bg-stone-800'>
+                        {/* Close Chat Icon */}
+                        <MdClose  onClick={() => {
+                            setCurrSelectedChat(null);
+                            setShowDrawer(true);
+                            
+                        }} className='text-xs text-center mx-2 text-white bg-red-500 rounded-full h-4 border-2 min-w-4 md:hidden cursor-pointer hover:bg-yellow-500' />
+
+
                         <div onClick={() => setModalOpen(true)}
-                            className='flex items-center gap-4 px-5 w-full  transition-all ease-in delay-75'>
+                            className='flex items-center gap-4  w-full   transition-all ease-in delay-75'>
                             <img src={currSelectedChat?.isGroupChat && currSelectedChat?.groupAvatar ||
                                 getSenderDetails(currentUser, currSelectedChat?.users)?.avatar || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"}
-                                className='w-10 h-10 bg-white dark:bg-stone-400 rounded-full cursor-pointer hover:opacity-90' alt="" />
-                            <div className='flex w-full flex-col cursor-pointer hover:opacity-80'>
+                                className='w-8 h-8 md:w-10 md:h-10 bg-white dark:bg-stone-400 rounded-full cursor-pointer hover:opacity-90' alt="" />
+                            <div className='flex w-full text-xs  overflow-hidden flex-col cursor-pointer hover:opacity-80'>
                                 <p>{currSelectedChat?.isGroupChat && currSelectedChat?.chatName || getSenderDetails(currentUser, currSelectedChat?.users)?.fullName}</p>
                                 {
                                     currSelectedChat?.isGroupChat &&
@@ -232,11 +240,11 @@ const ChatArea = () => {
                             </div>
                         </div>
 
-                        <div className='flex items-center gap-4 px-5'>
+                        <div className='flex items-center gap-4 px-3 md:px-5'>
                             {
                                 !currSelectedChat?.isGroupChat &&
                                 <>
-                                    <MdCall className='cursor-pointer hover:text-gray-500 text-blue-600 dark:text-gray-300 ' />
+                                    {/* <MdCall className='cursor-pointer hover:text-gray-500 text-blue-600 dark:text-gray-300 ' /> */}
                                     <FaVideo onClick={() => {
                                         setInitCall(true)
                                     }} className='cursor-pointer hover:text-gray-500 text-blue-600 dark:text-gray-300 ' />
@@ -247,14 +255,14 @@ const ChatArea = () => {
                                 setSearchModalOpen(true)
                             }}
                                 className='cursor-pointer hover:text-gray-500 text-gray-600 dark:text-gray-300 ' />
-                            <PiDotsThreeOutlineVerticalFill title='Options' className='text-xl cursor-pointer hover:text-gray-500 text-gray-600 dark:text-gray-300' />
+                            {/* <PiDotsThreeOutlineVerticalFill title='Options' className='text-xl cursor-pointer hover:text-gray-500 text-gray-600 dark:text-gray-300' /> */}
                         </div>
                     </div>
 
 
                     {/* Chat Area Main */}
 
-                    <div className='flex-grow relative overflow-y-scroll p-5 lg:p-10 '
+                    <div className='flex-grow relative overflow-y-scroll md:p-5 lg:p-10 '
                         style={{ scrollbarWidth: 'thin' }}>
                         {/* 
                         <p className='dark:text-stone-400 text-gray-400 w-fit px-4 mb-4 py-[2px] mx-auto text-xs bg-slate-50 dark:bg-stone-700 rounded-full'>
