@@ -68,7 +68,7 @@ const Dashboard = () => {
             <div className='sticky z-50 '>
                 <Sidebar />
             </div>
-            <div className={`sticky z-10  max-sm:w-screen md:max-w-[400px] rounded-t-xl md:rounded-t-2xl  p-1 max-sm:text-sm mb-0 ${!showDrawer ? 'max-sm:hidden' : ''}`}>
+            <div className={`sticky z-10  bg-white dark:bg-stone-700 max-sm:w-screen md:max-w-[400px] rounded-t-xl md:rounded-t-2xl  p-1 max-sm:text-sm mb-0 ${!showDrawer ? 'max-sm:hidden' : ''}`}>
                 <CommonDrawer />
                 <DynamicDrawer collapse={collapse} setCollapse={setCollapse} />
             </div>

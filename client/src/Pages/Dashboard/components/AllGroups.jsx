@@ -3,13 +3,14 @@ import { RiAddBoxFill } from "react-icons/ri";
 import SearchInp from './smallComponets/SearchInp';
 import { PiDotsThreeOutlineVerticalFill } from 'react-icons/pi';
 import { useChatContext } from '../../../Contexts/ChatProvider';
-import { accessedChat } from '../../../atoms/state';
+import { accessedChat, commonDrawer } from '../../../atoms/state';
 import { useRecoilState } from 'recoil';
 
 const AllGroups = () => {
     const {allChats} = useChatContext();
     const [filterChats,setFilterChats]=useState(allChats?.filter((i)=>i.isGroupChat===true))
     const [currSelectedChat,setCurrSelectedChat]=useRecoilState(accessedChat)
+    // const [value, setValue] = useRecoilState(commonDrawer);
    const handleSearch=(e)=>{
         const searchTerm=e.target.value.toLowerCase();
         if(!searchTerm){
@@ -31,7 +32,7 @@ const AllGroups = () => {
 
                     <div className='flex items-center gap-5'>
 
-                        <RiAddBoxFill title='New Group' className='text-2xl cursor-pointer hover:text-blue-400 text-blue-600' />
+                        {/* <RiAddBoxFill onClick={() => setValue("CreateGroup")}title='New Group' className='text-2xl cursor-pointer hover:text-blue-400 text-blue-600' /> */}
                         <PiDotsThreeOutlineVerticalFill title='Options' className='text-xl cursor-pointer hover:text-gray-400 text-gray-600' />
                     </div>           
                      </div>

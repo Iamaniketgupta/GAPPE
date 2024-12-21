@@ -113,9 +113,10 @@ const AllChats = () => {
 
             {/* Chats and groups */}
             
+          <div>
             {
                 chatsloading ?
-                    (<div className='flex overflow-y-auto  relative max-h-[calc(100vh-200px)] flex-col gap-1 mt-2'
+                    (<div className='flex overflow-y-auto  relative max-h-[calc(100vh-200px)]  flex-col gap-1 mt-2'
                         style={{ scrollbarWidth: 'none', scrollbarColor: 'blue' }}>
                         {Array(5).fill().map((_, index) => <UsersListShimmer key={index} />)}
                     </div>) :
@@ -124,8 +125,8 @@ const AllChats = () => {
                             <p className='  text-gray-500 dark:text-gray-300'>No Chats</p>
                         </div>
                     ):
-                    (<div className='flex overflow-y-auto  min-h-full max-h-[calc(100vh-140px)]  flex-col gap-2'
-                        style={{ scrollbarWidth: 'thin', scrollbarColor: 'blue' }}>
+                    (<div className='flex overflow-y-auto   min-h-full max-h-[calc(100vh-140px)]  flex-col gap-2'
+                        style={{ scrollbarWidth: 'none', scrollbarColor: 'blue' }}>
                         {filterChats?.map((item) => {
                            const allNotificationMessages = notifications?.filter((i) => i.chat._id === item?._id);
 
@@ -181,7 +182,7 @@ const AllChats = () => {
                 )
                     
             }
-
+  </div>
 
 
 
